@@ -29,7 +29,7 @@ public class EquipeService {
 
     public ContratosEquipeDtoResponse findContratosEquipeById(Long id){
         Optional<Equipe> equipe = equipeRepository.findById(id);
-        return ContratosEquipeDtoResponse.toDtoResponseList(equipe,contratoJogadorRepository.findByIdEquipe(id).stream().toList(),
+        return ContratosEquipeDtoResponse.toDtoResponseList(equipe.stream().toList().get(0),contratoJogadorRepository.findByIdEquipe(id).stream().toList(),
                 contratoTecnicoRepository.findByIdEquipe(id).stream().toList());
     }
 

@@ -28,12 +28,12 @@ public class ContratosEquipeDtoResponse {
 
     private List<ContratoTecnicoDtoResponse> tecnicos;
 
-    public static ContratosEquipeDtoResponse toDtoResponseList(Optional<Equipe> equipe, List<ContratoJogador> jogadores, List<ContratoTecnico> tecnicos){
+    public static ContratosEquipeDtoResponse toDtoResponseList(Equipe equipe, List<ContratoJogador> jogadores, List<ContratoTecnico> tecnicos){
         return ContratosEquipeDtoResponse.builder()
-                .idEquipe(equipe.get().getIdEquipe())
-                .nomeEquipe(equipe.get().getNomeEquipe())
-                .fundacao(equipe.get().getFundacao())
-                .presidente(equipe.get().getPresidente())
+                .idEquipe(equipe.getIdEquipe())
+                .nomeEquipe(equipe.getNomeEquipe())
+                .fundacao(equipe.getFundacao())
+                .presidente(equipe.getPresidente())
                 .jogadores(ContratoJogadorDtoResponse.toDtoResponseList(jogadores))
                 .tecnicos(ContratoTecnicoDtoResponse.toDtoResponseList(tecnicos))
                 .build();
