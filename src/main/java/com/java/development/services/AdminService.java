@@ -35,8 +35,8 @@ public class AdminService {
     TecnicoRepository tecnicoRepository;
 
     @Transactional
-    public ContratosEquipeDtoResponse criarEquipeCompleta(EquipeDtoRequest equipe){
-        Equipe equipeFake = EquipeFaker.criarEquipe(equipe.toDtoResponse(equipe));
+    public ContratosEquipeDtoResponse criarEquipeCompleta(EquipeDtoRequest equipeDtoRequest){
+        Equipe equipeFake = EquipeFaker.criarEquipe(EquipeDtoRequest.converterParaEntity(equipeDtoRequest));
         Equipe equipeCriada = equipeRepository.save(equipeFake);
         List<Jogador> jogadoresCriados = criarJogadoresFakes();
         criarContratosFakes(equipeCriada,jogadoresCriados);
@@ -140,18 +140,20 @@ public class AdminService {
     public List<ContratoJogador> criarContratosFakes(Equipe equipe, List<Jogador> jogadores){
         List<ContratoJogador> contratos = new ArrayList<>();
         //TODO melhorar lógica para criação de números, para que não ocorram repetições
+        ArrayList<Integer> numerosContrato = new ArrayList<Integer>();
         for(Jogador jogador : jogadores){
             Calendar dtFimContrato = Calendar.getInstance();
             dtFimContrato.add(Calendar.YEAR, 2);
             ContratoJogador contratoJogador = new ContratoJogador();
             contratoJogador.setJogador(jogador);
-            contratoJogador.setNumeroJogador(new Random().nextInt(100));
+            contratoJogador.setNumeroJogador(gerarNumeroSemRepeticao(numerosContrato));
             contratoJogador.setStatus("Vigente");
             contratoJogador.setDtInicio(new Date());
             contratoJogador.setDtFim(dtFimContrato.getTime());
             contratoJogador.setEquipe(equipe);
             contratoJogadorRepository.save(contratoJogador);
             contratos.add(contratoJogador);
+            numerosContrato.add(contratoJogador.getNumeroJogador());
         }
         return contratos;
     }
@@ -170,6 +172,14 @@ public class AdminService {
 
     public Equipe obterEquipePorId(Long idEquipe) {
         return equipeRepository.findById(idEquipe).stream().toList().get(0);
+    }
+
+    public Integer gerarNumeroSemRepeticao(ArrayList<Integer> listaNumeros) {
+        Integer numero = new Random().nextInt(100);
+        while (listaNumeros.contains(numero)) {
+            numero = new Random().nextInt(100);
+        }
+        return numero;
     }
 
 }

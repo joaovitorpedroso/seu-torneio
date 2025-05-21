@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/jogador")
-public class JogadorResources {
+public class JogadorController {
 
     @Autowired
     private JogadorService jogadorService;

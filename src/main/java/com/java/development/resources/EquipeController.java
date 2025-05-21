@@ -1,10 +1,7 @@
 package com.java.development.resources;
 
-import com.java.development.entities.ContratoJogador;
-import com.java.development.entities.Equipe;
 import com.java.development.entities.dto.ContratosEquipeDtoResponse;
 import com.java.development.entities.dto.EquipeDtoResponse;
-import com.java.development.services.ContratoJogadorService;
 import com.java.development.services.EquipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/equipe")
-public class EquipeResources {
+public class EquipeController {
 
     @Autowired
     private EquipeService equipeService;

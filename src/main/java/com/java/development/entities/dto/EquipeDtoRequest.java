@@ -19,7 +19,7 @@ public class EquipeDtoRequest {
 
     private String presidente;
 
-    public Equipe toDtoResponse(EquipeDtoRequest equipeDtoRequest){
+    public static Equipe converterParaEntity(EquipeDtoRequest equipeDtoRequest){
         Equipe equipe = new Equipe();
         equipe.setNomeEquipe(equipeDtoRequest.getNomeEquipe());
         equipe.setFundacao(equipeDtoRequest.getFundacao());
