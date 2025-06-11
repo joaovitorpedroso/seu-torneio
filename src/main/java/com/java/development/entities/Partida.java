@@ -20,7 +20,7 @@ public class Partida {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idPartida;
 
-    private Date dataPartida;
+    private Date dataInicio;
 
     private int golsTotais;
 

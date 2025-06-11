@@ -4,6 +4,8 @@ import com.java.development.entities.Equipe;
 import com.java.development.entities.Partida;
 import com.java.development.entities.PartidaEquipe;
 import com.java.development.entities.dto.AdminPartidaDtoRequest;
+import com.java.development.entities.dto.ContratosEquipeDtoResponse;
+import com.java.development.entities.dto.PartidaDtoResponse;
 import com.java.development.repositories.EquipeRepository;
 import com.java.development.repositories.JogadorRepository;
 import com.java.development.repositories.PartidaEquipeRepository;
@@ -27,31 +29,35 @@ public class PartidaService {
     @Autowired
     private EquipeRepository equipeRepository;
 
-    private void criarPartidaAdmin(AdminPartidaDtoRequest request){
-        /*Long idTimeMandante = request.getIdEquipeMandante();
+    public PartidaDtoResponse criarPartidaAdmin(AdminPartidaDtoRequest request){
+        Long idTimeMandante = request.getIdEquipeMandante();
         Long idTimeVisitante = request.getIdEquipeMandante();
 
-        Optional<Equipe> equipeMandante = equipeRepository.findById(idTimeMandante);
-        Optional<Equipe> equipeVisitante = equipeRepository.findById(idTimeVisitante);
-        //Partida partida = criarNovaPartida();
-        Optional<Partida> Partida = partidaRepository.save()
-        PartidaEquipe dadosPartidaMandante;*/
+        //obter dados das duas equipes
+        Equipe equipeMandante = equipeRepository.findById(idTimeMandante).stream().toList().get(0);
+        Equipe equipeVisitante = equipeRepository.findById(idTimeVisitante).stream().toList().get(0);//TODO colocar validações aqui
+
+        Partida partida = criarNovaPartida(request.getIdFaseCampeonato());
+        partida = partidaRepository.save(partida);
+
+        PartidaEquipe partidaEquipeMandante = criarDadosPartida(equipeMandante,true,partida);
+        PartidaEquipe partidaEquipeVisitante = criarDadosPartida(equipeVisitante,false,partida);
+        return PartidaDtoResponse.toDtoResponse(partida, equipeMandante,equipeVisitante);
     }
 
-    private void criarDadosPartida(Equipe equipe,boolean mandante){
+    private PartidaEquipe criarDadosPartida(Equipe equipe,boolean mandante,Partida partida){
         PartidaEquipe equipePartida = new PartidaEquipe();
         equipePartida.setEquipe(equipe);
         equipePartida.setSituacao(mandante?"MANDANTE":"VISITANTE");//TODO: carregar por ENUM
-        //equipePartida.setPartida();
-        /*Optional<Equipe> equipeMandante = equipeRepository.findById(idTimeMandante);
-        Optional<Equipe> equipeVisitante = equipeRepository.findById(idTimeVisitante);
-
-        PartidaEquipe dadosPartidaMandante = partidaEquipeRepository.save()*/
+        equipePartida.setPartida(partida);
+        return partidaEquipeRepository.save(equipePartida);
     }
 
-    private void criarNovaPartida(){
+    private Partida criarNovaPartida(Long idFaseCampeonato){
         Partida partida = new Partida();
-        partida.setDataPartida(new Date());
+        partida.setDataInicio(new Date());
         partida.setEstadio("Maracanã");
+        partida.setIdFaseCampeonato(idFaseCampeonato);
+        return partida;
     }
 }

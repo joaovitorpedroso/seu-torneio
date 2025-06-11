@@ -10,4 +10,6 @@ public class AdminPartidaDtoRequest {
     public Long idEquipeMandante;
 
     public Long idEquipeVisitante;
+
+    public Long idFaseCampeonato;
 }

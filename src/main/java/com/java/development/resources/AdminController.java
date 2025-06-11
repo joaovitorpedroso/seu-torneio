@@ -31,9 +31,9 @@ public class AdminController {
     }
 
     @PutMapping(value="/partida")
-    public String criarPartidaRandom(@RequestBody AdminPartidaDtoRequest request){
-        //partidaService.criarPartida(request);
-        return "partida criada";
+    public ResponseEntity<PartidaDtoResponse> criarPartidaRandom(@RequestBody AdminPartidaDtoRequest request){
+        return ResponseEntity.ok().body(partidaService.criarPartidaAdmin(request));
+        //return "partida criada";
     }
 
     /*@PutMapping(value="/jogadores")
