@@ -51,7 +51,7 @@ public class ContratoJogadorDtoResponse {
 
     public static ContratoJogadorDtoResponse toDtoResponse(ContratoJogador contrato){
         return ContratoJogadorDtoResponse.builder()
-                .idJogador(contrato.getJogador().getId())
+                .idJogador(contrato.getJogador().getIdJogador())
                 .nomeJogador(contrato.getJogador().getNomeJogador())
                 .dtNascJogador(contrato.getJogador().getDtNascJogador())
                 .numeroJogador(contrato.getNumeroJogador())

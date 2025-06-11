@@ -139,7 +139,6 @@ public class AdminService {
 
     public List<ContratoJogador> criarContratosFakes(Equipe equipe, List<Jogador> jogadores){
         List<ContratoJogador> contratos = new ArrayList<>();
-        //TODO melhorar lógica para criação de números, para que não ocorram repetições
         ArrayList<Integer> numerosContrato = new ArrayList<Integer>();
         for(Jogador jogador : jogadores){
             Calendar dtFimContrato = Calendar.getInstance();

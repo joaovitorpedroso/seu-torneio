@@ -15,14 +15,14 @@ import java.util.Objects;
 @Setter
 @Entity
 @Table(name="Jogador")
-@EqualsAndHashCode(of = {"id"})
+@EqualsAndHashCode(of = {"idJogador"})
 public class Jogador implements Serializable {
     private static final long serialVersionUID = 1L;
 
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idJogador;
 
     private String nomeJogador;
 
@@ -39,8 +39,8 @@ public class Jogador implements Serializable {
     public Jogador() {
     }
 
-    public Jogador(Long id, String nomeJogador, Date dtNascJogador,String statusJogador, String peDominante, Posicao posicao) {
-        this.id = id;
+    public Jogador(Long idJogador, String nomeJogador, Date dtNascJogador,String statusJogador, String peDominante, Posicao posicao) {
+        this.idJogador = idJogador;
         this.nomeJogador = nomeJogador;
         this.dtNascJogador = dtNascJogador;
         this.statusJogador = statusJogador;

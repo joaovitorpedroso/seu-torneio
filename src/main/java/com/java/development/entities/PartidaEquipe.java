@@ -1,0 +1,34 @@
+package com.java.development.entities;
+
+import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.Date;
+
+@Getter
+@Setter
+@Entity
+@Table(name="partidaequipe")
+@EqualsAndHashCode(of = {"idPartidaEquipe"})
+public class PartidaEquipe {
+
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idPartidaEquipe;
+
+    private int gols;
+
+    private String situacao;
+
+    @ManyToOne
+    @JoinColumn(name = "idEquipe")
+    private Equipe equipe;
+
+    @OneToOne
+    @JoinColumn(name = "idPartida")
+    private Partida partida;
+}

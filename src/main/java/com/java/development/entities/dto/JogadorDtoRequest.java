@@ -28,7 +28,7 @@ public class JogadorDtoRequest {
     public Jogador toDtoResponse(JogadorDtoRequest jogadorDtoRequest){
         Jogador jogador = new Jogador();
         if(jogadorDtoRequest.getIdJogador()!=null&&jogadorDtoRequest.getIdJogador()!=0){
-            jogador.setId(jogadorDtoRequest.getIdJogador());
+            jogador.setIdJogador(jogadorDtoRequest.getIdJogador());
         }
         jogador.setNomeJogador(jogadorDtoRequest.getNomeJogador());
         jogador.setDtNascJogador(jogadorDtoRequest.getDtNascJogador());

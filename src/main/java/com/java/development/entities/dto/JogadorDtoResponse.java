@@ -34,7 +34,7 @@ public class JogadorDtoResponse {
 
     public static JogadorDtoResponse converterParaDtoResponse(Jogador jogador) {
         return JogadorDtoResponse.builder()
-                .id(jogador.getId())
+                .id(jogador.getIdJogador())
                 .nomeJogador(jogador.getNomeJogador())
                 .dtNascJogador(jogador.getDtNascJogador())
                 .statusJogador(jogador.getStatusJogador())
