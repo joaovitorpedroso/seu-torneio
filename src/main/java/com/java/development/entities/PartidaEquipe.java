@@ -28,7 +28,11 @@ public class PartidaEquipe {
     @JoinColumn(name = "idEquipe")
     private Equipe equipe;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "idPartida")
     private Partida partida;
+
+    @ManyToOne
+    @JoinColumn(name = "idEscalacao")
+    private Escalacao escalacao;
 }

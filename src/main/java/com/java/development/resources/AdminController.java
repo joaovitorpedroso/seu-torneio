@@ -1,19 +1,11 @@
 package com.java.development.resources;
 
-import com.java.development.entities.ContratoJogador;
-import com.java.development.entities.Equipe;
-import com.java.development.entities.Jogador;
 import com.java.development.entities.dto.*;
 import com.java.development.services.AdminService;
-import com.java.development.services.EquipeService;
 import com.java.development.services.PartidaService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/admin")
@@ -34,6 +26,11 @@ public class AdminController {
     public ResponseEntity<PartidaDtoResponse> criarPartidaRandom(@RequestBody AdminPartidaDtoRequest request){
         return ResponseEntity.ok().body(partidaService.criarPartidaAdmin(request));
         //return "partida criada";
+    }
+
+    @PutMapping(value="/partida/escalacao/{idPartida}")
+    public ResponseEntity<EscalacaoPartidaDtoResponse> criarPartidaRandom(@PathVariable Long idPartida){
+        return ResponseEntity.ok().body(partidaService.escalarJogadoresAutomatico(idPartida));
     }
 
     /*@PutMapping(value="/jogadores")
