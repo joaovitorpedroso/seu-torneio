@@ -4,8 +4,7 @@ import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -32,7 +31,7 @@ public class PartidaEquipe {
     @JoinColumn(name = "idPartida")
     private Partida partida;
 
-    @ManyToOne
-    @JoinColumn(name = "idEscalacao")
-    private Escalacao escalacao;
+    @OneToMany
+    @JoinColumn(name = "idEscalacaoJogadorHistorico")
+    private List<EscalacaoJogadorHistorico> escalacaoJogadorHistorico;
 }

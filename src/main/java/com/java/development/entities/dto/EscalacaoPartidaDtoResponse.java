@@ -1,9 +1,6 @@
 package com.java.development.entities.dto;
 
-import com.java.development.entities.Campeonato;
-import com.java.development.entities.ContratoJogador;
-import com.java.development.entities.EscalacaoJogadorHistorico;
-import com.java.development.entities.PartidaEquipe;
+import com.java.development.entities.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

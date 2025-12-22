@@ -1,6 +1,5 @@
 package com.java.development.entities.dto;
 
-import com.java.development.entities.ContratoJogador;
 import com.java.development.entities.EscalacaoJogadorHistorico;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,6 +26,14 @@ public class EscalacaoEquipeDtoResponse {
                 .titulares(titularesEscalados.stream().map(EscalacaoEquipeDtoResponse::toDtoResponse).toList())
                 .reservas(reservasEscalados.stream().map(EscalacaoEquipeDtoResponse::toDtoResponse).toList())
                 .nomeEquipe(titularesEscalados.stream().toList().get(0).getContratoJogador().getEquipe().getNomeEquipe())
+                .build();
+    }
+
+    public static EscalacaoEquipeDtoResponse toDtoResponseListEquipeUnica(List<EscalacaoJogadorHistorico> jogadoresEscalados){
+        return EscalacaoEquipeDtoResponse.builder()
+                .titulares(jogadoresEscalados.stream().filter(jogador -> (jogador.getStatus().equals("TITULAR"))).map(EscalacaoEquipeDtoResponse::toDtoResponse).toList())
+                .reservas(jogadoresEscalados.stream().filter(jogador -> (!jogador.getStatus().equals("TITULAR"))).map(EscalacaoEquipeDtoResponse::toDtoResponse).toList())
+                .nomeEquipe(jogadoresEscalados.stream().toList().get(0).getContratoJogador().getEquipe().getNomeEquipe())
                 .build();
     }
 }

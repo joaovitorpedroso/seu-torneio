@@ -18,9 +18,9 @@ public class EscalacaoJogadorHistorico {
     private int minutoInicial;
     private int minutoFinal;
 
-    @ManyToOne
-    @JoinColumn(name = "idEscalacao")
-    private Escalacao escalacao;
+    @OneToOne
+    @JoinColumn(name = "idPartidaEquipe")
+    private PartidaEquipe partidaEquipe;
 
     @ManyToOne
     @JoinColumn(name = "idContratoJogador")

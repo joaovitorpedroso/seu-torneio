@@ -15,11 +15,11 @@ import java.util.List;
 public class JogadorEscaladoDtoResponse {
 
     public Long idJogador;
-    public Posicao posicao;
     public String nome;
     public int numeroJogador;
+    public Posicao posicao;
 
-    public static JogadorEscaladoDtoResponse toDtoResponse(EscalacaoJogadorHistorico jogador){
+    public static JogadorEscaladoDtoResponse toDtoResponse(EscalacaoJogadorHistorico jogador) {
         return JogadorEscaladoDtoResponse.builder()
                 .idJogador(jogador.getContratoJogador().getJogador().getIdJogador())
                 .nome(jogador.getContratoJogador().getJogador().getNomeJogador())

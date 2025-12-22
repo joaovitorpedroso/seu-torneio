@@ -74,14 +74,6 @@ CREATE TABLE Partida(
 	idFaseCampeonato INT  REFERENCES FaseCampeonato(idFaseCampeonato)
 );
 
-CREATE TABLE PartidaEquipe(
-	idPartidaEquipe SERIAL PRIMARY KEY,
-	gols INT,
-	situacao VARCHAR(100),
-	idEquipe INT  REFERENCES Equipe(idEquipe),
-	idPartida INT  REFERENCES Partida(idPartida)
-);
-
 
 CREATE TABLE ContratoJogador(
 	idContratoJogador SERIAL PRIMARY KEY,
@@ -102,6 +94,42 @@ create TABLE ContratoTecnico(
 	status VARCHAR(100) NOT NULL
 );
 
+create table InscricaoContratoJogadorCampeonato (
+	idInscricaoContratoJogadorCampeonato SERIAL primary key,
+	dataInscricao TIMESTAMP not null,
+	dataFinal TIMESTAMP,
+	status VARCHAR(100),
+	idEdicaoCampeonato INT references EdicaoCampeonato(idEdicao),
+	idContratoJogador INT references ContratoJogador(idContratoJogador)
+);
+
+
+CREATE TABLE PartidaEquipe (
+	idPartidaEquipe SERIAL PRIMARY KEY,
+	gols INT,
+	situacao VARCHAR(100),
+	idEquipe INT  REFERENCES Equipe(idEquipe),
+	idPartida INT  REFERENCES Partida(idPartida)
+);
+
+create table EscalacaoJogadorHistorico (
+	idEscalacaoJogadorHistorico SERIAL primary KEY,
+	status VARCHAR(100) not null,
+	minutoInicial INT,
+	minutoFinal INT,
+	idPartidaEquipe INT REFERENCES PartidaEquipe(idPartidaEquipe),
+	idContratoJogador INT references ContratoJogador(idContratoJogador),
+	idPosicao INT references Posicao(idPosicao)
+);
+
+create table InscricaoJogadorCampeonato(
+	idInscricaoJogadorCampeonato SERIAL primary key,
+	idContratoJogador INT references ContratoJogador(idContratoJogador),
+	idEdicaoCampeonato INT references EdicaoCampeonato(idEdicao),
+	dataInicio TIMESTAMP,
+	dataFim TIMESTAMP,
+	status VARCHAR(100)
+);
 
 INSERT INTO Posicao(nomePosicao,descPosicao) VALUES('Goleiro','GL');
 INSERT INTO Posicao(nomePosicao,descPosicao) VALUES('Zagueiro','ZG');
