@@ -1,5 +1,6 @@
 package com.java.development.entities;
 
+import com.java.development.entities.enums.SituacaoPartida;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -21,7 +22,8 @@ public class PartidaEquipe {
 
     private int gols;
 
-    private String situacao;
+    @Enumerated(EnumType.STRING)
+    private SituacaoPartida situacao;
 
     @ManyToOne
     @JoinColumn(name = "idEquipe")

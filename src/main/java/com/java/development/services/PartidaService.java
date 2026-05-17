@@ -3,6 +3,7 @@ package com.java.development.services;
 import com.java.development.entities.*;
 import com.java.development.entities.dto.AdminPartidaDtoRequest;
 import com.java.development.entities.dto.PartidaDtoResponse;
+import com.java.development.entities.enums.SituacaoPartida;
 import com.java.development.repositories.*;
 import jakarta.transaction.Transactional;
 import org.hibernate.sql.exec.ExecutionException;
@@ -55,7 +56,7 @@ public class PartidaService {
     private PartidaEquipe criarDadosPartida(Equipe equipe,boolean mandante,Partida partida){
         PartidaEquipe equipePartida = new PartidaEquipe();
         equipePartida.setEquipe(equipe);
-        equipePartida.setSituacao(mandante?"MANDANTE":"VISITANTE");//TODO: carregar por ENUM
+        equipePartida.setSituacao(mandante? SituacaoPartida.MANDANTE:SituacaoPartida.VISITANTE);
         equipePartida.setPartida(partida);
         return partidaEquipeRepository.save(equipePartida);
     }
@@ -94,5 +95,15 @@ public class PartidaService {
             inscricao.setDataInicio(Timestamp.valueOf(LocalDateTime.now()));
             inscricaoJogadorCampeonatoRepository.save(inscricao);
         }
+    }
+
+    @Transactional
+    public PartidaDtoResponse consultarPartidaPorId(Long idPartida) throws Exception {
+        Optional<Partida> partida = partidaRepository.findById(idPartida);
+        if (partida == null) {
+            throw new Exception("aa");
+        }
+        List<PartidaEquipe> equipes = partidaEquipeRepository.findPartidaEquipeByIdPartida(partida.get().getIdPartida());
+        return PartidaDtoResponse.toDtoResponse(partida.get(), equipes);
     }
 }

@@ -1,7 +1,9 @@
 package com.java.development.resources;
 
 import com.java.development.entities.dto.EscalacaoEquipeDtoResponse;
+import com.java.development.entities.dto.PartidaDtoResponse;
 import com.java.development.services.EscalacaoService;
+import com.java.development.services.PartidaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,9 +17,17 @@ public class PartidaController {
 
     @Autowired
     private EscalacaoService escalacaoService;
+    @Autowired
+    private PartidaService partidaService;
 
     @GetMapping("/{idPartida}/escalacao/{idEquipe}")
     public ResponseEntity<EscalacaoEquipeDtoResponse> findJogadores(@PathVariable Long idPartida, @PathVariable Long idEquipe) {
         return ResponseEntity.ok().body(escalacaoService.listarEscalacaoPorTime(idPartida,idEquipe));
     }
+
+    @GetMapping("/{idPartida}")
+    public ResponseEntity<PartidaDtoResponse> consultarPartida(@PathVariable Long idPartida) throws Exception {
+        return ResponseEntity.ok().body(partidaService.consultarPartidaPorId(idPartida));
+    }
+
 }
