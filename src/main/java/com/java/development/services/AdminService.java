@@ -48,6 +48,9 @@ public class AdminService {
     @Autowired
     EscalacaoService escalacaoService;
 
+    @Autowired
+    PartidaService partidaService;
+
     @Transactional
     public ContratosEquipeDtoResponse criarEquipeCompleta(EquipeDtoRequest equipeDtoRequest){
         Equipe equipeFake = EquipeFaker.criarEquipe(EquipeDtoRequest.converterParaEntity(equipeDtoRequest));
@@ -71,13 +74,26 @@ public class AdminService {
             int minuto = 0;
             List<AcaoPartida> acoes = new ArrayList<>();
             while (!partida_encerrada){
-                minuto += ThreadLocalRandom.current().nextInt(1, duracao_partida);
+                //minuto += ThreadLocalRandom.current().nextInt(minuto, duracao_partida);
+                minuto += obterMinutoPartida(minuto, duracao_partida);
                 int autor_feito = ThreadLocalRandom.current().nextInt(1, 3);
                 if(minuto>=duracao_partida){
                     partida_encerrada=true;
                 } else {
+
                     AcaoPartida acao = new AcaoPartida();
-                    acao.setStatus(TipoAcao.GOL);
+                    switch (ThreadLocalRandom.current().nextInt(1, 5)){
+                        case 1:
+                            acao.setTipo(TipoAcao.GOL);
+                            break;
+                        case 2:
+                            acao.setTipo(TipoAcao.CARTAO_AMARELO); break;
+                        case 3:
+                            acao.setTipo(TipoAcao.DESARME); break;
+                        default:
+                            acao.setTipo(TipoAcao.PASSE_ERRADO); break;
+
+                    }
                     boolean autor_mandante = autor_feito == 1;
                     EscalacaoJogadorHistorico jogadorSelecionado = new EscalacaoJogadorHistorico();
                     if (autor_mandante) {
@@ -94,6 +110,7 @@ public class AdminService {
 
             }
             System.out.println(acoes);
+            partidaService.encerrarPartida(escalacaoPartidaDto.getPartida(),escalacaoPartidaDto,acoes);
         }
 
 
@@ -232,6 +249,23 @@ public class AdminService {
             numero = new Random().nextInt(100);
         }
         return numero;
+    }
+
+    public int obterMinutoPartida(int minutoAtual,int duracaoPartida){
+
+        boolean numeroValido = false;
+        int minutosRestantes = duracaoPartida-minutoAtual;
+        if(minutosRestantes<=5) {
+            return ThreadLocalRandom.current().nextInt(0, 6);
+        }
+        //int minuto = 0;
+        /*while (!numeroValido){
+            minuto = ThreadLocalRandom.current().nextInt(0, minutosRestantes)/2;
+        }*/
+        int divisor = 1;
+        if(minutoAtual<30) divisor = 2;//TODO furamente, mudar para 2
+        if(minutoAtual>30 && minutoAtual<75) divisor = 2;
+        return ThreadLocalRandom.current().nextInt(0, minutosRestantes)/divisor;
     }
 
 }

@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name="campeonato")
+@Table(name="acaoPartida")
 @EqualsAndHashCode(of = {"id"})
 public class AcaoPartida {
 
@@ -17,8 +17,10 @@ public class AcaoPartida {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private TipoAcao status;
+    private TipoAcao tipo;
+
     private int minuto;
+
     private int acrescimo;
 
     @OneToOne

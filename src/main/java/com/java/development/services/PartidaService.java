@@ -2,9 +2,12 @@ package com.java.development.services;
 
 import com.java.development.entities.*;
 import com.java.development.entities.dto.AdminPartidaDtoRequest;
+import com.java.development.entities.dto.EscalacaoPartidaDto;
 import com.java.development.entities.dto.EscalacaoPartidaDtoResponse;
 import com.java.development.entities.dto.PartidaDtoResponse;
 import com.java.development.entities.enums.SituacaoPartida;
+import com.java.development.entities.enums.StatusPartida;
+import com.java.development.entities.enums.TipoAcao;
 import com.java.development.repositories.*;
 import jakarta.transaction.Transactional;
 import org.hibernate.sql.exec.ExecutionException;
@@ -38,6 +41,9 @@ public class PartidaService {
 
     @Autowired
     private EscalacaoJogadorHistoricoRepository escalacaoJogadorHistoricoRepository;
+
+    @Autowired
+    private AcaoPartidaRepository acaoPartidaRepository;
 
     public PartidaDtoResponse criarPartidaAdmin(AdminPartidaDtoRequest request){
         Long idEquipeMandante = request.getIdEquipeMandante();
@@ -119,8 +125,40 @@ public class PartidaService {
         if (equipes.size()>2) throw new ExecutionException("Mais de 2 equipes na mesma partida");//TODO melhorar trativa
         for(PartidaEquipe partidaEquipe : equipes){
             jogadoresEscalados.add(escalacaoJogadorHistoricoRepository.findJogadoresByIdEquipeAndIdPartida(partidaEquipe.getPartida().getIdPartida(),partidaEquipe.getEquipe().getIdEquipe()));
-            //jogadoresEscalados.add(escalacaoJogadorHistoricoRepository.findJogadoresByIdPartida(partidaEquipe.getEquipe().getIdEquipe(),partidaEquipe.getPartida().getIdPartida()));
         }
         return EscalacaoPartidaDtoResponse.toDtoResponseList(jogadoresEscalados);
+    }
+
+    @Transactional
+    public void encerrarPartida(Partida partida, EscalacaoPartidaDto escalacaoPartidaDto,List<AcaoPartida> acoes) {
+
+
+
+        PartidaEquipe mandante = escalacaoPartidaDto.getMandante().getPartidaEquipe();
+        mandante.setGols(
+                acoes.stream().filter(acaoPartida ->
+                    acaoPartida.getTipo().equals(TipoAcao.GOL)
+                ).toList()
+                .stream().filter(acaoPartida -> acaoPartida.getPartidaEquipe().getSituacao().equals(SituacaoPartida.MANDANTE))
+                .toList()
+                .size()
+        );
+        PartidaEquipe visitante = escalacaoPartidaDto.getVisitante().getPartidaEquipe();
+        visitante.setGols(
+                acoes.stream().filter(acaoPartida ->
+                    acaoPartida.getTipo().equals(TipoAcao.GOL)
+                ).toList()
+                .stream().filter(acaoPartida -> acaoPartida.getPartidaEquipe().getSituacao().equals(SituacaoPartida.VISITANTE))
+                .toList()
+                .size()
+        );
+        partida.setGolsTotais(mandante.getGols() + visitante.getGols());
+        partida.setStatus(StatusPartida.ENCERRADA);
+        partidaEquipeRepository.save(mandante);
+        partidaEquipeRepository.save(visitante);
+        acaoPartidaRepository.saveAll(acoes);
+        partidaRepository.save(partida);
+
+
     }
 }

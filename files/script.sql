@@ -70,7 +70,8 @@ CREATE TABLE Partida(
 	idPartida SERIAL PRIMARY KEY,
 	dataInicio DATE,
 	golsTotais INT,
-	estadio VARCHAR,
+	estadio VARCHAR(100),
+	status VARCHAR(100),
 	idFaseCampeonato INT  REFERENCES FaseCampeonato(idFaseCampeonato)
 );
 

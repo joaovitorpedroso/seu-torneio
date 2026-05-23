@@ -1,5 +1,6 @@
 package com.java.development.entities;
 
+import com.java.development.entities.enums.StatusPartida;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -25,6 +26,8 @@ public class Partida {
     private int golsTotais;
 
     private String estadio;
+
+    private StatusPartida status;
 
     private Long idFaseCampeonato;
 }

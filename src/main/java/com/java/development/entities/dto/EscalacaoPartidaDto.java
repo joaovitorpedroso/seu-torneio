@@ -1,6 +1,7 @@
 package com.java.development.entities.dto;
 
 import com.java.development.entities.EscalacaoJogadorHistorico;
+import com.java.development.entities.Partida;
 import com.java.development.entities.enums.SituacaoPartida;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,6 +20,8 @@ public class EscalacaoPartidaDto {
     EscalacaoEquipeDto mandante;
 
     EscalacaoEquipeDto visitante;
+
+    Partida partida;
 
     //TODO criar atributos para separar visitante do mandante
 
@@ -45,6 +48,9 @@ public class EscalacaoPartidaDto {
             equipesEscaladasDtoResponse.add(EscalacaoEquipeDto.toDtoList(titulares,reservas));
         }
         return EscalacaoPartidaDto.builder().equipes(equipesEscaladasDtoResponse)
-                .mandante(mandante).visitante(visitante).build();
+                .mandante(mandante)
+                .visitante(visitante)
+                .partida(mandante.getPartidaEquipe().getPartida())
+                .build();
     }
 }
