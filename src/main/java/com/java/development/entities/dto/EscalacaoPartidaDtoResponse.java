@@ -21,7 +21,7 @@ public class EscalacaoPartidaDtoResponse {
             List<EscalacaoJogadorHistorico> titulares = new ArrayList<>();
             List<EscalacaoJogadorHistorico> reservas = new ArrayList<>();
             for(EscalacaoJogadorHistorico jogadorEscalado : escalacaoPorEquipe){
-                if(jogadorEscalado.getStatus().toUpperCase() == "TITULAR")
+                if(jogadorEscalado.getStatus().equalsIgnoreCase("TITULAR"))
                     titulares.add(jogadorEscalado);
                 else
                     reservas.add(jogadorEscalado);

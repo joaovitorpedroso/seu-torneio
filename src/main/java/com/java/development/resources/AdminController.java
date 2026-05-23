@@ -37,6 +37,12 @@ public class AdminController {
         return ResponseEntity.ok().body(escalacaoService.escalarJogadoresAutomatico(idPartida));
     }
 
+    @PutMapping(value="/partida/automatica/{idPartida}")
+    public ResponseEntity<String> finalizarPartida(@PathVariable Long idPartida) throws Exception {
+        adminService.criarPlacarPartida(idPartida);
+        return ResponseEntity.ok("Operação em andamento");
+    }
+
     /*@PutMapping(value="/jogadores")
     //public ResponseEntity<ContratosEquipeDtoResponse> listarTodosContratosEquipePorIdEquipe(@RequestBody EquipeDtoRequest equipe){
     public List<Jogador> listarTodosContratosEquipePorIdEquipe(){

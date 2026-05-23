@@ -2,6 +2,7 @@ package com.java.development.services;
 
 import com.java.development.entities.ContratoJogador;
 import com.java.development.entities.EscalacaoJogadorHistorico;
+import com.java.development.entities.Partida;
 import com.java.development.entities.PartidaEquipe;
 import com.java.development.entities.dto.EscalacaoEquipeDtoResponse;
 import com.java.development.entities.dto.EscalacaoPartidaDtoResponse;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -41,7 +43,7 @@ public class EscalacaoService {
         if (dadosPartidaEquipe.size()>2) throw new ExecutionException("Mais de 2 equipes na mesma partida");//TODO melhorar trativa
         for(PartidaEquipe partidaEquipe : dadosPartidaEquipe){
             escalarEquipeAutomaticamente(partidaEquipe,idPartida);
-            partidaEquipeRepository.save(partidaEquipe);
+            //partidaEquipeRepository.save(partidaEquipe);
             jogadoresEscalados.add(escalacaoJogadorHistoricoRepository.findJogadoresByIdEquipe(partidaEquipe.getEquipe().getIdEquipe()));
         }
 
@@ -268,8 +270,23 @@ public class EscalacaoService {
         return escalacaoCompleta;
     }
 
-    public EscalacaoEquipeDtoResponse listarEscalacaoPorTime(Long idPartida, Long idEquipe){
+    public EscalacaoEquipeDtoResponse listarEscalacaoPorTime(Long idEquipe){
 
         return EscalacaoEquipeDtoResponse.toDtoResponseListEquipeUnica(escalacaoJogadorHistoricoRepository.findJogadoresByIdEquipe(idEquipe));
+    }
+
+    @Transactional
+    public List<List<EscalacaoJogadorHistorico>> listarEscalacoesCompletasDaPartida(Partida partida) throws Exception {
+
+        List<PartidaEquipe> equipes = partidaEquipeRepository.findPartidaEquipeByIdPartida(partida.getIdPartida());
+
+
+        List<List<EscalacaoJogadorHistorico>> jogadoresEscalados = new ArrayList<>();
+        if (equipes.size()>2) throw new ExecutionException("Mais de 2 equipes na mesma partida");//TODO melhorar trativa
+        for(PartidaEquipe partidaEquipe : equipes){
+            jogadoresEscalados.add(escalacaoJogadorHistoricoRepository.findJogadoresByIdEquipeAndIdPartida(partidaEquipe.getPartida().getIdPartida(),partidaEquipe.getEquipe().getIdEquipe()));
+            //jogadoresEscalados.add(escalacaoJogadorHistoricoRepository.findJogadoresByIdPartida(partidaEquipe.getEquipe().getIdEquipe(),partidaEquipe.getPartida().getIdPartida()));
+        }
+        return jogadoresEscalados;
     }
 }

@@ -14,4 +14,13 @@ public interface EscalacaoJogadorHistoricoRepository extends JpaRepository<Escal
     @Query("select ejh from EscalacaoJogadorHistorico ejh " +
             "WHERE ejh.partidaEquipe.equipe.id = :idEquipe")
     public List<EscalacaoJogadorHistorico> findJogadoresByIdEquipe(Long idEquipe);
+
+    @Query("select ejh from EscalacaoJogadorHistorico ejh " +
+            "WHERE ejh.partidaEquipe.equipe.id = :idEquipe " +
+            "AND ejh.partidaEquipe.partida.id = :idPartida")
+    public List<EscalacaoJogadorHistorico> findJogadoresByIdEquipeAndIdPartida(Long idPartida, Long idEquipe);
+
+    @Query("select ejh from EscalacaoJogadorHistorico ejh " +
+            "WHERE ejh.partidaEquipe.partida.id = :idPartida")
+    public List<EscalacaoJogadorHistorico> findJogadoresByIdPartida(Long idPartida, Long idEquipe);
 }

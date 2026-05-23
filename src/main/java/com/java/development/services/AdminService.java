@@ -1,17 +1,19 @@
 package com.java.development.services;
 
 import com.java.development.entities.*;
-import com.java.development.entities.dto.ContratosEquipeDtoResponse;
-import com.java.development.entities.dto.EquipeDtoRequest;
+import com.java.development.entities.dto.*;
+import com.java.development.entities.enums.TipoAcao;
 import com.java.development.repositories.*;
 import com.java.development.services.faker.EquipeFaker;
 import com.java.development.services.faker.JogadorFaker;
 import com.java.development.services.faker.TecnicoFaker;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 public class AdminService {
@@ -34,6 +36,18 @@ public class AdminService {
     @Autowired
     TecnicoRepository tecnicoRepository;
 
+    @Autowired
+    PartidaRepository partidaRepository;
+
+    @Autowired
+    EscalacaoJogadorHistoricoRepository escalacaoJogadorHistoricoRepository;
+
+    @Autowired
+    PartidaEquipeRepository partidaEquipeRepository;
+
+    @Autowired
+    EscalacaoService escalacaoService;
+
     @Transactional
     public ContratosEquipeDtoResponse criarEquipeCompleta(EquipeDtoRequest equipeDtoRequest){
         Equipe equipeFake = EquipeFaker.criarEquipe(EquipeDtoRequest.converterParaEntity(equipeDtoRequest));
@@ -44,6 +58,45 @@ public class AdminService {
         criarContratoTecnico(equipeCriada,tecnicoCriado);
         return ContratosEquipeDtoResponse.toDtoResponseList(equipeCriada,contratoJogadorRepository.findByIdEquipe(equipeCriada.getIdEquipe()).stream().toList(),
                 contratoTecnicoRepository.findByIdEquipe(equipeCriada.getIdEquipe()).stream().toList());
+    }
+
+    @Transactional
+    public void criarPlacarPartida(Long idPartida) throws Exception {
+        List<PartidaEquipe> partidaEquipes = partidaEquipeRepository.findPartidaEquipeByIdPartida(idPartida);
+        EscalacaoPartidaDto escalacaoPartidaDto = EscalacaoPartidaDto.toDtoList(escalacaoService.listarEscalacoesCompletasDaPartida(partidaEquipes.get(0).getPartida()));
+        if(partidaEquipes.size()==2){
+            boolean partida_encerrada = false;
+            int duracao_partida = 90;
+            int minutos_restantes = 90;
+            int minuto = 0;
+            List<AcaoPartida> acoes = new ArrayList<>();
+            while (!partida_encerrada){
+                minuto += ThreadLocalRandom.current().nextInt(1, duracao_partida);
+                int autor_feito = ThreadLocalRandom.current().nextInt(1, 3);
+                if(minuto>=duracao_partida){
+                    partida_encerrada=true;
+                } else {
+                    AcaoPartida acao = new AcaoPartida();
+                    acao.setStatus(TipoAcao.GOL);
+                    boolean autor_mandante = autor_feito == 1;
+                    EscalacaoJogadorHistorico jogadorSelecionado = new EscalacaoJogadorHistorico();
+                    if (autor_mandante) {
+                        jogadorSelecionado = escalacaoPartidaDto.getMandante().getTitulares().get(ThreadLocalRandom.current().nextInt(1, escalacaoPartidaDto.getMandante().getTitulares().size()));
+                    }
+                    else {
+                        jogadorSelecionado = escalacaoPartidaDto.getVisitante().getTitulares().get(ThreadLocalRandom.current().nextInt(1, escalacaoPartidaDto.getMandante().getTitulares().size()));
+                    }
+                    acao.setContratoJogador(jogadorSelecionado.getContratoJogador());
+                    acao.setPartidaEquipe(jogadorSelecionado.getPartidaEquipe());
+                    acao.setMinuto(minuto);
+                    acoes.add(acao);
+                }
+
+            }
+            System.out.println(acoes);
+        }
+
+
     }
 
     public List<Jogador> criarJogadoresFakes(){

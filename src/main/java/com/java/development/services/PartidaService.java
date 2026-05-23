@@ -2,6 +2,7 @@ package com.java.development.services;
 
 import com.java.development.entities.*;
 import com.java.development.entities.dto.AdminPartidaDtoRequest;
+import com.java.development.entities.dto.EscalacaoPartidaDtoResponse;
 import com.java.development.entities.dto.PartidaDtoResponse;
 import com.java.development.entities.enums.SituacaoPartida;
 import com.java.development.repositories.*;
@@ -34,6 +35,9 @@ public class PartidaService {
 
     @Autowired
     private ContratoJogadorRepository contratoJogadorRepository;
+
+    @Autowired
+    private EscalacaoJogadorHistoricoRepository escalacaoJogadorHistoricoRepository;
 
     public PartidaDtoResponse criarPartidaAdmin(AdminPartidaDtoRequest request){
         Long idEquipeMandante = request.getIdEquipeMandante();
@@ -100,10 +104,23 @@ public class PartidaService {
     @Transactional
     public PartidaDtoResponse consultarPartidaPorId(Long idPartida) throws Exception {
         Optional<Partida> partida = partidaRepository.findById(idPartida);
-        if (partida == null) {
-            throw new Exception("aa");
-        }
         List<PartidaEquipe> equipes = partidaEquipeRepository.findPartidaEquipeByIdPartida(partida.get().getIdPartida());
         return PartidaDtoResponse.toDtoResponse(partida.get(), equipes);
+    }
+
+    @Transactional
+    public EscalacaoPartidaDtoResponse consultarEscalacaoCompletaPorId(Long idPartida) throws Exception {
+        Optional<Partida> partida = partidaRepository.findById(idPartida);
+
+        List<PartidaEquipe> equipes = partidaEquipeRepository.findPartidaEquipeByIdPartida(partida.get().getIdPartida());
+
+
+        List<List<EscalacaoJogadorHistorico>> jogadoresEscalados = new ArrayList<>();
+        if (equipes.size()>2) throw new ExecutionException("Mais de 2 equipes na mesma partida");//TODO melhorar trativa
+        for(PartidaEquipe partidaEquipe : equipes){
+            jogadoresEscalados.add(escalacaoJogadorHistoricoRepository.findJogadoresByIdEquipeAndIdPartida(partidaEquipe.getPartida().getIdPartida(),partidaEquipe.getEquipe().getIdEquipe()));
+            //jogadoresEscalados.add(escalacaoJogadorHistoricoRepository.findJogadoresByIdPartida(partidaEquipe.getEquipe().getIdEquipe(),partidaEquipe.getPartida().getIdPartida()));
+        }
+        return EscalacaoPartidaDtoResponse.toDtoResponseList(jogadoresEscalados);
     }
 }
