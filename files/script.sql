@@ -131,6 +131,16 @@ create table InscricaoJogadorCampeonato(
 	status VARCHAR(100)
 );
 
+create table AcaoPartida(
+	id SERIAL primary key,
+	idContratoJogador INT references ContratoJogador(idContratoJogador),
+	idPartidaEquipe INT REFERENCES PartidaEquipe(idPartidaEquipe),
+	minuto INT,
+	acrescimo INT,
+	tipo VARCHAR(100)
+)
+
+
 INSERT INTO Posicao(nomePosicao,descPosicao) VALUES('Goleiro','GL');
 INSERT INTO Posicao(nomePosicao,descPosicao) VALUES('Zagueiro','ZG');
 INSERT INTO Posicao(nomePosicao,descPosicao) VALUES('Lateral Esquerdo','LE');
